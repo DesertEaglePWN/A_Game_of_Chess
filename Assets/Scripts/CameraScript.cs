@@ -4,7 +4,8 @@ using System.Collections;
 public class CameraScript : MonoBehaviour {
     Vector3 CounterClockwise = new Vector3(0, -1, 0);
     Vector3 Clockwise = new Vector3(0, 1, 0);
-    private float localY;
+    private float localZ;
+    private float InputAxisValue;
 
     [SerializeField]
     private float minCameraZoom;
@@ -21,30 +22,34 @@ public class CameraScript : MonoBehaviour {
 	void Update () {
         if (Input.GetMouseButton(2) || (Input.GetMouseButton(0) && Input.GetMouseButton(1)))
         {
-            if (Input.GetAxis("Mouse X") > 0)
+            InputAxisValue = Input.GetAxis("Mouse X");
+            if (InputAxisValue > 0)
             {
                 this.transform.parent.Rotate(CounterClockwise * Time.deltaTime * 50);
 
             }
-            else if (Input.GetAxis("Mouse X") < 0)
+            else if (InputAxisValue < 0)
             {
                 this.transform.parent.Rotate(Clockwise * Time.deltaTime * 50);
             }
         
         }
-        if (Input.GetAxis("Mouse ScrollWheel") > 0) 
+        InputAxisValue = Input.GetAxis("Mouse ScrollWheel");
+        if (InputAxisValue > 0) 
         {
-            localY = this.transform.localPosition.y;
-            if (localY > minCameraZoom){
-                this.transform.localPosition = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y - 1, this.transform.localPosition.z + 1);
+            Debug.Log(InputAxisValue);
+            localZ = this.transform.localPosition.z;
+            if (Mathf.Abs(localZ) > minCameraZoom){
+                this.transform.localPosition = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y-1, this.transform.localPosition.z+1);
             }
         }
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        else if (InputAxisValue < 0)
         {
-            localY = this.transform.localPosition.y;
-            if (localY < maxCameraZoom)
+            Debug.Log(InputAxisValue);
+            localZ = this.transform.localPosition.z;
+            if (Mathf.Abs(localZ) < maxCameraZoom)
             {
-                this.transform.localPosition = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y + 1, this.transform.localPosition.z - 1);
+                this.transform.localPosition = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y+1, this.transform.localPosition.z-1);
             }
         }
 	}
